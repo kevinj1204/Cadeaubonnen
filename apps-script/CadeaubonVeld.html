@@ -1,0 +1,103 @@
+<!--
+  The Light Portraits – invoerveld voor een cadeauboncode
+  =========================================================
+  Plak dit blok in de HTML van de boekingsapp, op de plek waar de klant
+  het overzicht/de prijs ziet (vlak boven de knop om de boeking te versturen).
+
+  Daarna in je eigen JavaScript:
+    - tlpCadeaubon.setTotal(165)   → roep aan zodra de prijs van de gekozen shoot bekend is
+    - tlpCadeaubon.getCode()       → geef deze waarde mee bij het versturen van de boeking
+  De echte verrekening gebeurt server-side (cadeaubon_hold_), dit veld laat het alleen zien.
+-->
+<div class="tlp-gc" id="tlpGiftCard">
+  <button type="button" class="tlp-gc-toggle" id="tlpGcToggle" aria-expanded="false">Heb je een cadeaubon?</button>
+  <div class="tlp-gc-body" id="tlpGcBody" hidden>
+    <label for="tlpGcInput" class="tlp-gc-label">Cadeaubon / waardecode</label>
+    <div class="tlp-gc-row">
+      <input id="tlpGcInput" class="tlp-gc-input" type="text" placeholder="TLP-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16">
+      <button type="button" id="tlpGcApply" class="tlp-gc-btn">Toepassen</button>
+    </div>
+    <div id="tlpGcResult" class="tlp-gc-result" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<style>
+  .tlp-gc { margin: 18px 0; border-top: 1px solid #2a2a2e; padding-top: 14px; font-family: inherit; }
+  .tlp-gc-toggle { background: none; border: 0; padding: 4px 0; color: #cf9466; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; }
+  .tlp-gc-label { display: block; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #9b958b; margin: 12px 0 8px; }
+  .tlp-gc-row { display: flex; gap: 8px; }
+  .tlp-gc-input { flex: 1; min-width: 0; min-height: 48px; padding: 12px 14px; background: #101012; border: 1px solid #2a2a2e; border-radius: 3px; color: #ece7df; font-size: 16px; letter-spacing: .12em; text-transform: uppercase; }
+  .tlp-gc-input:focus { outline: none; border-color: #b87a4b; }
+  .tlp-gc-btn { min-height: 48px; padding: 0 18px; border: 1px solid #b87a4b; background: #b87a4b; color: #120d09; border-radius: 3px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; }
+  .tlp-gc-btn:disabled { opacity: .5; cursor: default; }
+  .tlp-gc-result { font-size: 14px; margin-top: 10px; line-height: 1.5; }
+  .tlp-gc-result.ok { color: #9bb89a; }
+  .tlp-gc-result.err { color: #d4796a; }
+  .tlp-gc-result .tlp-gc-sum { color: #ece7df; margin-top: 6px; }
+  .tlp-gc-remove { background: none; border: 0; color: #9b958b; text-decoration: underline; cursor: pointer; padding: 0; font-size: 13px; margin-left: 6px; }
+</style>
+
+<script>
+  (function () {
+    var total = null;      // prijs van de boeking in euro
+    var applied = null;    // geldige code na controle
+    var $ = function (id) { return document.getElementById(id); };
+    var euro = function (n) { return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n); };
+
+    $('tlpGcToggle').addEventListener('click', function () {
+      var body = $('tlpGcBody');
+      body.hidden = !body.hidden;
+      this.setAttribute('aria-expanded', String(!body.hidden));
+      if (!body.hidden) $('tlpGcInput').focus();
+    });
+
+    function show(html, ok) {
+      var el = $('tlpGcResult');
+      el.className = 'tlp-gc-result ' + (ok ? 'ok' : 'err');
+      el.innerHTML = html;
+    }
+
+    function apply() {
+      var code = $('tlpGcInput').value.trim();
+      if (!code) return show('Vul je code in.', false);
+      $('tlpGcApply').disabled = true;
+      show('<span style="color:#9b958b">Controleren…</span>', true);
+      google.script.run
+        .withSuccessHandler(function (r) {
+          $('tlpGcApply').disabled = false;
+          if (!r.valid) { applied = null; fire(); return show(r.message, false); }
+          applied = r;
+          var html = '✓ ' + r.message;
+          if (r.toPay !== null && r.toPay !== undefined) {
+            html += '<div class="tlp-gc-sum">Verrekend: − ' + euro(r.applied) + ' · <strong>Nog te betalen: ' + euro(r.toPay) + '</strong></div>';
+            if (r.remaining - r.applied > 0) html += '<div style="color:#9b958b;font-size:13px">Na deze boeking blijft er ' + euro(r.remaining - r.applied) + ' op je cadeaubon staan.</div>';
+          }
+          html += '<button type="button" class="tlp-gc-remove" id="tlpGcRemove">Verwijderen</button>';
+          show(html, true);
+          $('tlpGcRemove').addEventListener('click', function () { applied = null; $('tlpGcInput').value = ''; show('', true); fire(); });
+          fire();
+        })
+        .withFailureHandler(function () {
+          $('tlpGcApply').disabled = false;
+          show('Er ging iets mis. Probeer het opnieuw.', false);
+        })
+        .cadeaubon_check(code, total);
+    }
+
+    function fire() {
+      document.dispatchEvent(new CustomEvent('tlp:cadeaubon', { detail: applied }));
+    }
+
+    $('tlpGcApply').addEventListener('click', apply);
+    $('tlpGcInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); apply(); } });
+
+    window.tlpCadeaubon = {
+      /** Prijs van de boeking in euro (opnieuw controleren als er al een code is) */
+      setTotal: function (euroTotal) { total = euroTotal; if (applied) apply(); },
+      /** Geldige code of '' — geef dit mee aan je server-functie die de boeking opslaat */
+      getCode: function () { return applied ? applied.code : ''; },
+      /** Laatste controle-resultaat (of null) */
+      get: function () { return applied; }
+    };
+  })();
+</script>
