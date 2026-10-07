@@ -123,6 +123,7 @@ Na het toevoegen of wijzigen: **Deployments → ⋯ → Redeploy**.
 | Betaald — activeren | Bon wordt actief en direct bruikbaar; geldigheid wordt gezet; klant krijgt (optioneel) de PDF |
 | Blokkeren / Blokkade opheffen | Tijdelijk onbruikbaar maken (bijv. bij twijfel) |
 | Annuleren / Heropenen | Code definitief onbruikbaar (terug te draaien) |
+| Verwijderen | Bestelling + bon helemaal wissen (alleen als de bon nooit in een boeking is gebruikt; typ VERWIJDER ter bevestiging) |
 | Handmatig afboeken | Tegoed gebruiken buiten de boekingsapp (bijv. betaling in de studio) |
 | Terugzetten | Een afboeking ongedaan maken; bedrag komt terug op de bon |
 | Wijzigen (op de cadeaubon) | Naam/boodschap aanpassen; PDF wordt opnieuw gegenereerd |
@@ -154,7 +155,7 @@ Na het toevoegen of wijzigen: **Deployments → ⋯ → Redeploy**.
 - Zolang een bon niet betaald is, staat er een watermerk *“Voorbeeld — nog niet actief”* op.
 - De klant krijgt de PDF als bijlage bij de activatiemail, plus een persoonlijke downloadlink (werkt alleen voor die ene, geactiveerde bon; na “Opnieuw genereren” vervalt de oude link).
 - **Ontwerp aanpassen:** kleuren en teksten via Instellingen. Een volledig nieuw ontwerp (bijv. kerst) voeg je toe als extra functie in `lib/pdf.ts` → `DESIGNS`; elke bon heeft een `design_key` in de database.
-- Lettertypes: Cormorant Garamond + Jost (map `assets/fonts`, open licentie).
+- Lettertypes: Cormorant Garamond + Inter, gelijk aan de boekingsapp (map `assets/fonts`, open licentie).
 
 ## 9. E-mail instellen
 

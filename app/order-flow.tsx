@@ -349,11 +349,12 @@ export default function OrderFlow({ settings }: { settings: PublicSettings }) {
   return (
     <div className="shell">
       <header className="brand" ref={topRef}>
-        <div className="eyebrow brand-mark">The Light Portraits</div>
-        <hr className="rule" />
+        <h1 className="brand-name">The Light<br />Portraits</h1>
+        <div className="brand-tagline">Real moments. Real beauty. <em>Real you.</em></div>
+        <div className="brand-rule" />
         {step === 0 && (
           <>
-            <h1 className="h1">{settings.intro.title}</h1>
+            <h2 className="h1 intro-title">{settings.intro.title}</h2>
             <p className="lead intro">{settings.intro.subtitle}</p>
           </>
         )}
@@ -701,7 +702,12 @@ export default function OrderFlow({ settings }: { settings: PublicSettings }) {
 const flowCss = `
 .shell { max-width: 1080px; margin: 0 auto; padding: 48px 20px 40px; }
 .brand { text-align: center; margin-bottom: 30px; scroll-margin-top: 16px; }
-.brand-mark { color: var(--text); letter-spacing: .42em; font-size: 12px; }
+.brand-name { font-family: var(--font-display); font-size: 44px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; margin: 0; line-height: 1.05; }
+.brand-tagline { font-family: var(--font-display); font-style: italic; font-size: 20px; margin-top: 10px; }
+.brand-tagline em { color: var(--copper); }
+.brand-rule { width: 120px; height: 1px; background: var(--copper); margin: 22px auto 26px; opacity: .6; }
+.intro-title { font-size: clamp(32px, 6vw, 44px) !important; }
+@media (max-width: 600px) { .brand-name { font-size: 36px; } }
 .intro { max-width: 560px; margin: 16px auto 0; }
 .stepper { list-style: none; display: flex; justify-content: center; gap: 6px; padding: 0; margin: 0 auto 34px; max-width: 720px; }
 .stepper li { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; color: var(--faint); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
@@ -710,7 +716,7 @@ const flowCss = `
 .stepper .n { width: 29px; height: 29px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 12px; letter-spacing: 0; background: var(--bg); }
 .stepper li.is-current { color: var(--text); }
 .stepper li.is-current .n { border-color: var(--copper); color: var(--gold); }
-.stepper li.is-done .n { border-color: var(--copper); background: var(--copper); color: #120d09; }
+.stepper li.is-done .n { border-color: var(--copper); background: var(--copper); color: #131315; }
 @media (max-width: 600px) {
   .stepper .l { display: none; }
   .stepper li.is-current .l { display: block; position: absolute; top: 36px; white-space: nowrap; }
@@ -744,7 +750,7 @@ const flowCss = `
 .actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 22px; }
 .actions .btn:last-child { min-width: 200px; }
 @media (max-width: 600px) {
-  .actions { position: sticky; bottom: 0; margin: 22px -20px 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(11,11,12,0), rgba(11,11,12,.94) 26%); }
+  .actions { position: sticky; bottom: 0; margin: 22px -20px 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(19,19,21,0), rgba(19,19,21,.94) 26%); }
   .actions .btn:last-child { flex: 1; min-width: 0; }
 }
 .sum-block { border-top: 1px solid var(--line-soft); padding: 18px 0 14px; }

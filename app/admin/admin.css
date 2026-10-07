@@ -1,5 +1,5 @@
 .adm { min-height: 100vh; background: var(--bg); }
-.adm-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 28px; background: rgba(11,11,12,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
+.adm-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 28px; background: rgba(19,19,21,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
 .adm-brand { display: flex; flex-direction: column; gap: 2px; text-decoration: none !important; }
 .adm-sub { font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--muted); }
 .adm-nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
@@ -17,7 +17,7 @@
 .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
 .filter { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 14px; font-size: 12px; color: var(--muted); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
 .filter:hover { color: var(--text); border-color: #3b3b40; }
-.filter[aria-pressed="true"] { border-color: var(--copper); color: var(--text); background: rgba(184,122,75,.08); }
+.filter[aria-pressed="true"] { border-color: var(--copper); color: var(--text); background: rgba(196,144,111,.08); }
 .filter .c { font-size: 11px; color: var(--faint); }
 
 .table-wrap { border: 1px solid var(--line-soft); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }

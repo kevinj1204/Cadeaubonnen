@@ -27,6 +27,12 @@ function List() {
   const [offset, setOffset] = useState(0);
   const [data, setData] = useState<{ rows: any[]; total: number; counts: Record<string, number> } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deleted, setDeleted] = useState<string | null>(params.get("deleted"));
+  useEffect(() => {
+    if (!deleted) return;
+    const t = setTimeout(() => setDeleted(null), 4000);
+    return () => clearTimeout(t);
+  }, [deleted]);
 
   useEffect(() => {
     const t = setTimeout(async () => {
@@ -133,6 +139,7 @@ function List() {
           </table>
         )}
       </div>
+      {deleted && <div className="toast" role="status">Bestelling {deleted} is verwijderd.</div>}
       {data && data.total > PAGE && (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 14 }}>
           <span className="muted small">{offset + 1}–{Math.min(offset + PAGE, data.total)} van {data.total}</span>

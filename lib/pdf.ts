@@ -31,9 +31,9 @@ async function loadFontBytes() {
     display: "cormorant-garamond-latin-300-normal.woff",
     displayItalic: "cormorant-garamond-latin-400-italic.woff",
     displayMedium: "cormorant-garamond-latin-500-normal.woff",
-    sans: "Jost_400Regular.ttf",
-    sansLight: "Jost_300Light.ttf",
-    sansMedium: "Jost_500Medium.ttf",
+    sans: "inter-latin-400-normal.woff",
+    sansLight: "inter-latin-300-normal.woff",
+    sansMedium: "inter-latin-500-normal.woff",
   };
   const out: Record<string, Uint8Array> = {};
   for (const [k, f] of Object.entries(files)) out[k] = new Uint8Array(await readFile(path.join(dir, f)));

@@ -159,5 +159,17 @@ check("deblokkeren → terug naar deels gebruikt", unb.data.voucher?.status === 
 const health = await http("GET", "/api/v1/health", null, { Authorization: `Bearer ${KEY}` });
 check("health-check met sleutel", health.data.ok === true);
 
+// 8. Verwijderen
+console.log("Verwijderen");
+const usedDel = await http("DELETE", `/api/admin/orders/${row.id}`);
+check("gebruikte bon kan niet verwijderd worden", usedDel.status === 400, usedDel.data);
+const fresh = await http("POST", "/api/admin/orders", { customerType: "private", amount: 25, firstName: "Weg", lastName: "Ermee", email: "weg@example.com" });
+const del = await http("DELETE", `/api/admin/orders/${fresh.data.id}`);
+check("ongebruikte bon verwijderd", del.status === 200 && del.data.ok, del.data);
+const gone = await http("GET", `/api/admin/orders/${fresh.data.id}`);
+check("verwijderde bestelling bestaat niet meer", gone.status === 404);
+c = await api("check", { code: fresh.data.code });
+check("verwijderde code is onbekend", c.status === 404);
+
 console.log(`\n${failed ? "✗" : "✓"} ${passed} geslaagd, ${failed} mislukt\n`);
 process.exit(failed ? 1 : 0);

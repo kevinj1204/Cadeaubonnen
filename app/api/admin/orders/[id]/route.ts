@@ -1,5 +1,5 @@
 import { emailConfigured, sendTemplate } from "@/lib/email";
-import { ActionError, applyAdminAction, getOrderDetail, type AdminAction } from "@/lib/orders";
+import { ActionError, applyAdminAction, deleteOrder, getOrderDetail, type AdminAction } from "@/lib/orders";
 import { pdfToken, requireAdmin } from "@/lib/security";
 import { getSettings } from "@/lib/settings";
 import { VOUCHER_STATUSES } from "@/lib/format";
@@ -50,6 +50,21 @@ export async function POST(req: Request, ctx: Ctx) {
       email = res.status;
     }
     return Response.json({ ok: true, email, ...(await detail(id)) });
+  } catch (e) {
+    if (e instanceof ActionError) return Response.json({ error: e.message }, { status: 400 });
+    throw e;
+  }
+}
+
+// DELETE: bestelling + cadeaubon definitief verwijderen (alleen als de bon nooit gebruikt is)
+export async function DELETE(req: Request, ctx: Ctx) {
+  const deny = await requireAdmin(req);
+  if (deny) return deny;
+  const { id } = await ctx.params;
+  if (!/^[0-9a-f-]{36}$/.test(id)) return Response.json({ error: "Niet gevonden" }, { status: 404 });
+  try {
+    const r = await deleteOrder(id);
+    return Response.json({ ok: true, ...r });
   } catch (e) {
     if (e instanceof ActionError) return Response.json({ error: e.message }, { status: 400 });
     throw e;

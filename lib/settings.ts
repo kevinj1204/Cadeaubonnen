@@ -54,11 +54,11 @@ export const DEFAULT_SETTINGS: Settings = {
     subtitle: "Cadeaubon",
     footer: "In te wisselen bij het boeken van een fotoshoot via thelightportraits.nl",
     website: "thelightportraits.nl",
-    accent: "#B87A4B",
-    accentSoft: "#C9A96E",
-    background: "#0E0E0F",
-    text: "#EDE8E0",
-    muted: "#8F887E",
+    accent: "#C4906F",
+    accentSoft: "#C4906F",
+    background: "#131315",
+    text: "#F3ECE6",
+    muted: "#A39A92",
   },
   notifyEmail: "info@thelightportraits.nl",
   emails: {
@@ -134,6 +134,12 @@ export async function getSettings(fresh = false): Promise<Settings> {
   if (!fresh && cache && Date.now() - cache.at < 15_000) return cache.value;
   const rows = await query<{ value: any }>("SELECT value FROM settings WHERE key = 'app'");
   const value = merge(DEFAULT_SETTINGS, rows[0]?.value ?? {});
+  // Oude standaardkleuren (vóór de afstemming op de boekingsapp) automatisch bijwerken
+  const d = value.design;
+  if (d.accent.toUpperCase() === "#B87A4B" && d.background.toUpperCase() === "#0E0E0F") {
+    const n = DEFAULT_SETTINGS.design;
+    value.design = { ...d, accent: n.accent, accentSoft: n.accentSoft, background: n.background, text: n.text, muted: n.muted };
+  }
   cache = { at: Date.now(), value };
   return value;
 }

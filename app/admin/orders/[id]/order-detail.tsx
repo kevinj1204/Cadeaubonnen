@@ -102,6 +102,7 @@ export default function OrderDetail({ id }: { id: string }) {
   const inUse = s === "active" || s === "partially_used" || s === "used";
   const pct = v ? Math.round((v.remaining_cents / v.original_cents) * 100) : 0;
   const pdfUrl = `/api/admin/orders/${id}/pdf`;
+  const everUsed = d.redemptions.some((r) => r.status !== "released");
 
   return (
     <>
@@ -384,7 +385,35 @@ export default function OrderDetail({ id }: { id: string }) {
                 </button>
               )}
               {s === "cancelled" && <button className="btn ghost" disabled={busy} onClick={() => action({ action: "reopen" }, "Bestelling heropend.")}>Heropenen</button>}
+              {!everUsed && (
+                <button
+                  className="btn quiet"
+                  disabled={busy}
+                  onClick={() =>
+                    openAsk({
+                      title: "Definitief verwijderen?",
+                      text: `Bestelling ${o.order_number} en cadeaubon ${v.code} worden helemaal verwijderd, inclusief logboek. Dit kan niet ongedaan worden gemaakt. Typ VERWIJDER om te bevestigen.`,
+                      confirm: "Verwijderen",
+                      danger: true,
+                      input: { label: "Typ VERWIJDER", placeholder: "VERWIJDER" },
+                      run: async (typed) => {
+                        if (typed.trim().toUpperCase() !== "VERWIJDER") { setToast({ msg: "Niet verwijderd: typ VERWIJDER om te bevestigen.", err: true }); return; }
+                        setBusy(true);
+                        const res = await fetch(`/api/admin/orders/${id}`, { method: "DELETE" });
+                        const data = await res.json().catch(() => ({}));
+                        setBusy(false);
+                        if (!res.ok) { setToast({ msg: data.error || "Verwijderen mislukt.", err: true }); return; }
+                        router.replace("/admin?deleted=" + encodeURIComponent(data.orderNumber || ""));
+                      },
+                    })
+                  }
+                  style={{ color: "var(--danger)" }}
+                >
+                  Verwijderen
+                </button>
+              )}
             </div>
+            {everUsed && <p className="faint small" style={{ margin: "10px 0 0" }}>Deze bon is gebruikt in een boeking en kan daarom niet verwijderd worden, alleen geannuleerd.</p>}
 
             <div className="inline-form">
               <div className="label">E-mails opnieuw versturen</div>

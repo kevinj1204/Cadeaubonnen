@@ -3,29 +3,30 @@
    Pas hier de kleuren aan om exact aan te sluiten op de boekingsapp.
    ===================================================================== */
 :root {
-  --bg: #0b0b0c;
-  --bg-2: #101012;
-  --surface: #141416;
-  --surface-2: #1a1a1d;
-  --surface-3: #222226;
-  --line: #2a2a2e;
-  --line-soft: #1e1e21;
-  --text: #ece7df;
-  --muted: #9b958b;
-  --faint: #6c675f;
-  --copper: #b87a4b;
-  --copper-hi: #cf9466;
-  --gold: #c9a96e;
-  --danger: #d4796a;
+  /* Afgestemd op de boekingsapp (thelightportraits.nl/boeken) */
+  --bg: #131315;
+  --bg-2: #18181b;
+  --surface: #1b1b1e;
+  --surface-2: #222225;
+  --surface-3: #2a2a2e;
+  --line: #3a3330;
+  --line-soft: #2a2624;
+  --text: #f3ece6;
+  --muted: #a39a92;
+  --faint: #6f6761;
+  --copper: #c4906f;
+  --copper-hi: #d6a483;
+  --gold: #c4906f;
+  --danger: #e08b7d;
   --ok: #9bb89a;
   --warn: #d6b56d;
   --info: #8ea6c4;
 
   --font-display: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
-  --font-sans: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 
-  --radius: 3px;
-  --radius-lg: 6px;
+  --radius: 0px;
+  --radius-lg: 0px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   color-scheme: dark;
 }
@@ -59,7 +60,7 @@ a:hover {
   text-underline-offset: 3px;
 }
 ::selection {
-  background: rgba(184, 122, 75, 0.35);
+  background: rgba(196, 144, 111, 0.35);
 }
 button,
 input,
@@ -186,7 +187,7 @@ textarea {
 .textarea:focus {
   outline: none;
   border-color: var(--copper);
-  background: #121214;
+  background: #1d1d20;
 }
 .textarea {
   min-height: 120px;
@@ -253,7 +254,7 @@ textarea {
   border-radius: var(--radius);
   border: 1px solid var(--copper);
   background: var(--copper);
-  color: #120d09;
+  color: #131315;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.22em;
@@ -332,7 +333,7 @@ textarea {
 .choice[aria-pressed="true"],
 .choice[aria-checked="true"] {
   border-color: var(--copper);
-  background: linear-gradient(180deg, rgba(184, 122, 75, 0.09), rgba(184, 122, 75, 0.03));
+  background: linear-gradient(180deg, rgba(196, 144, 111, 0.09), rgba(196, 144, 111, 0.03));
 }
 .choice .t {
   font-size: 15px;
@@ -384,7 +385,7 @@ textarea {
 .amount[aria-pressed="true"] {
   border-color: var(--copper);
   color: var(--gold);
-  background: linear-gradient(180deg, rgba(184, 122, 75, 0.12), rgba(184, 122, 75, 0.03));
+  background: linear-gradient(180deg, rgba(196, 144, 111, 0.12), rgba(196, 144, 111, 0.03));
 }
 
 .segmented {
@@ -443,7 +444,7 @@ textarea {
   content: "";
   width: 5px;
   height: 10px;
-  border: solid #120d09;
+  border: solid #131315;
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg) translate(-1px, -1px);
 }
@@ -464,8 +465,8 @@ textarea {
   display: flex;
   gap: 12px;
   padding: 16px 18px;
-  border: 1px solid rgba(201, 169, 110, 0.28);
-  background: rgba(201, 169, 110, 0.05);
+  border: 1px solid rgba(196, 144, 111, 0.28);
+  background: rgba(196, 144, 111, 0.05);
   border-radius: var(--radius);
   font-size: 14px;
   color: #d9d1c3;
@@ -531,7 +532,7 @@ textarea {
   aspect-ratio: 1.418;
   width: 100%;
   border-radius: 4px;
-  background: radial-gradient(circle at 6% 6%, rgba(201, 169, 110, 0.16), rgba(201, 169, 110, 0) 46%), #0e0e0f;
+  background: #131315;
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px #1d1d20;
   overflow: hidden;
   container-type: inline-size;
@@ -541,14 +542,14 @@ textarea {
 .voucher::after {
   content: "";
   position: absolute;
-  border: 1px solid rgba(184, 122, 75, 0.85);
+  border: 1px solid rgba(196, 144, 111, 0.85);
   inset: 3%;
   pointer-events: none;
 }
 .voucher::after {
   inset: 4.1%;
   border-width: 0.5px;
-  border-color: rgba(184, 122, 75, 0.4);
+  border-color: rgba(196, 144, 111, 0.4);
 }
 .voucher .v-inner {
   position: absolute;
@@ -610,7 +611,7 @@ textarea {
   transform: translateX(-50%);
   width: 38.6cqw;
   height: 7.7cqw;
-  border: 1px solid rgba(184, 122, 75, 0.9);
+  border: 1px solid rgba(196, 144, 111, 0.9);
   background: rgba(255, 255, 255, 0.025);
   display: flex;
   flex-direction: column;

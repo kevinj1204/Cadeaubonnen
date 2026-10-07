@@ -264,3 +264,31 @@ export async function applyAdminAction(orderId: string, a: AdminAction, settings
     return { activated };
   });
 }
+
+/**
+ * Verwijdert een bestelling + cadeaubon definitief.
+ * Alleen toegestaan als de bon nooit (definitief of gereserveerd) gebruikt is in de boekingsapp,
+ * zodat de gebruiksgeschiedenis van echte boekingen nooit verloren gaat. Gebruik anders "Annuleren".
+ */
+export async function deleteOrder(orderId: string) {
+  return tx(async (c) => {
+    const o = (await c.query("SELECT id, order_number FROM orders WHERE id=$1 FOR UPDATE", [orderId])).rows[0];
+    if (!o) throw new ActionError("Bestelling niet gevonden");
+    const vs = (await c.query("SELECT id, code FROM vouchers WHERE order_id=$1 FOR UPDATE", [orderId])).rows;
+    for (const v of vs) {
+      const used = await c.query("SELECT 1 FROM redemptions WHERE voucher_id=$1 AND status IN ('held','captured') LIMIT 1", [v.id]);
+      if (used.rowCount) {
+        throw new ActionError(
+          `Cadeaubon ${v.code} is (deels) gebruikt of gereserveerd voor een boeking en kan daarom niet verwijderd worden. Gebruik "Annuleren" om de code onbruikbaar te maken.`,
+        );
+      }
+    }
+    for (const v of vs) {
+      await c.query("DELETE FROM redemptions WHERE voucher_id=$1", [v.id]);
+      await c.query("DELETE FROM events WHERE voucher_id=$1", [v.id]);
+      await c.query("DELETE FROM vouchers WHERE id=$1", [v.id]);
+    }
+    await c.query("DELETE FROM orders WHERE id=$1", [orderId]); // events en e-maillog gaan automatisch mee
+    return { orderNumber: o.order_number as string };
+  });
+}
