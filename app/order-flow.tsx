@@ -252,6 +252,17 @@ export default function OrderFlow({ settings }: { settings: PublicSettings }) {
     } catch {}
   }, [f, step, orderNumber]);
 
+  // In een iframe: geef de hoogte door aan de WordPress-pagina, zodat het iframe meegroeit
+  useEffect(() => {
+    if (window.parent === window) return;
+    const send = () =>
+      window.parent.postMessage({ type: "tlp-cadeaubon:height", height: document.documentElement.scrollHeight }, "*");
+    const ro = new ResizeObserver(send);
+    ro.observe(document.body);
+    send();
+    return () => ro.disconnect();
+  }, []);
+
   const set = <K extends keyof Form>(k: K, v: Form[K]) => {
     setF((p) => ({ ...p, [k]: v }));
     if (errors[k as string]) setErrors((e) => { const n = { ...e }; delete n[k as string]; return n; });
@@ -264,7 +275,14 @@ export default function OrderFlow({ settings }: { settings: PublicSettings }) {
   const goTo = (n: number) => {
     setStep(n);
     setServerError(null);
-    requestAnimationFrame(() => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    requestAnimationFrame(() => {
+      if (window.parent !== window) {
+        // In een iframe (WordPress): laat de pagina eromheen naar boven scrollen
+        window.parent.postMessage({ type: "tlp-cadeaubon:scrollTop" }, "*");
+      } else {
+        topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
   };
 
   const next = () => {

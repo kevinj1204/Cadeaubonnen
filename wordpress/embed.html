@@ -1,0 +1,24 @@
+<!--
+  The Light Portraits – cadeaubon-bestelpagina in WordPress
+  Plak dit in een blok "Aangepaste HTML" op de pagina /cadeaubon.
+  Het iframe past zijn hoogte automatisch aan per stap.
+  Vervang de src door je Vercel-adres als dat anders is.
+-->
+<iframe id="tlp-cadeaubon" src="https://cadeaubonnen.vercel.app" title="Cadeaubon bestellen"
+        style="width:100%;height:1200px;border:0;display:block;background:#0b0b0c;" loading="lazy"></iframe>
+<script>
+  (function () {
+    var f = document.getElementById('tlp-cadeaubon');
+    var origin = new URL(f.src).origin;
+    window.addEventListener('message', function (e) {
+      if (e.origin !== origin || !e.data || typeof e.data !== 'object') return;
+      if (e.data.type === 'tlp-cadeaubon:height' && e.data.height > 300) {
+        f.style.height = Math.ceil(e.data.height) + 'px';
+      }
+      if (e.data.type === 'tlp-cadeaubon:scrollTop') {
+        var top = f.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  })();
+</script>

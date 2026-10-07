@@ -57,11 +57,8 @@ Er staan geen geheimen in de frontend: alles wat gevoelig is draait server-side 
 2. Framework wordt automatisch herkend als **Next.js**. Niets aanpassen.
 3. Klik nog **niet** op Deploy als je de database nog niet hebt; doe eerst stap 3 en 4. (Al gedeployd? Geen probleem — na stap 3 en 4 kies je **Deployments → ⋯ → Redeploy**.)
 4. **Eigen adres (aanbevolen):** Project → **Settings → Domains → Add** → `cadeaubon.thelightportraits.nl`. Vercel toont een CNAME-record (meestal `cname.vercel-dns.com`). Voeg dat toe bij **goedkopewebhoster.nl → DNS-beheer** van thelightportraits.nl, net zoals je bij `casting.thelightportraits.nl` deed.
-5. **In WordPress tonen (optioneel):** zet op een pagina een HTML-blok:
-   ```html
-   <iframe src="https://cadeaubon.thelightportraits.nl" style="width:100%;min-height:1400px;border:0;" title="Cadeaubon bestellen"></iframe>
-   ```
-   Of link gewoon naar het subdomein vanuit je menu. De backoffice kan bewust níet in een iframe.
+5. **In WordPress tonen (zoals de review-app):** maak in WordPress een pagina, bijv. `/cadeaubon`, met een blok **Aangepaste HTML** en plak de inhoud van `wordpress/embed.html`. Het iframe groeit per stap automatisch mee in hoogte en scrollt netjes naar boven bij elke stap. De backoffice open je los via `<vercel-adres>/admin` (die kan bewust niet in een iframe).
+   Gebruik je geen subdomein, zet `APP_URL` dan op je Vercel-adres (bijv. `https://cadeaubonnen.vercel.app`).
 
 ## 3. Databaseconfiguratie
 
