@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Cadeaubon — The Light Portraits",
   description: "Bestel een cadeaubon van The Light Portraits: een fotoshoot cadeau doen, in elke gewenste waarde.",
   robots: { index: true, follow: true },
+  appleWebApp: { title: "Cadeaubonnen", statusBarStyle: "black-translucent", capable: true },
 };
 
 export const viewport: Viewport = {
